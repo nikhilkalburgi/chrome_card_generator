@@ -4,6 +4,9 @@
 
 The **News Card Generator** Chrome Extension allows users to effortlessly create visually appealing news cards from any news web page. By extracting the headline, main content, and featured image, the extension utilizes AI to summarize and generate a shareable news card. The card can be downloaded in high-quality PNG format, making it perfect for social media or personal archives.
 
+## Demo
+[DEMO](./extension_working_demo.mp4)
+
 ## Features
 
 - **Headline and Content Extraction**: Automatically extracts the title, main content, and featured image of any news page.
