@@ -1,21 +1,30 @@
 document.getElementById("generateCard").addEventListener("click", async () => {
 
   const card = document.getElementById('card');
+  const quota = document.getElementById('quota');
   const imgElement = document.getElementById('image');
   const titleElement = document.getElementById('title');
   const descElement = document.getElementById('description');
   const sourceElement = document.getElementById('Source');
+  const loader = document.getElementById('loading');
+  const cardContent = document.getElementById('cardContent');
+  const downloadCard = document.getElementById('downloadCard');
+
+  loader.classList.remove('hidden');
   card.classList.remove('hidden');
+ 
+  if(!cardContent.classList.contains('hidden')) {
+    cardContent.classList.add('hidden');
+    downloadCard.classList.add('hidden');
+  }
 
   const today = new Date().toDateString(); // Get today's date as a string
   const usageData = JSON.parse(localStorage.getItem('usage')) || {};
   // Quota exceeded
-  if (usageData.date === today && usageData.clicks >= 2) {
-      card.innerHTML = `
-      <h1>Quota Exceeded</h1>
-      <p>You can only generate 2 cards per day. Please try again tomorrow.</p>
-      `;
-      return;
+  if (usageData.date === today && usageData.clicks >= 2 && !usageData.unlimited) {
+    card.classList.add('hidden');
+    quota.classList.remove('hidden');
+    return;
   }
 
   const tabs = await chrome.tabs.query({
@@ -34,7 +43,7 @@ document.getElementById("generateCard").addEventListener("click", async () => {
 
       imgElement.src = newsdata.image;
       titleElement.innerHTML = summary.title;
-      descElement.innerHTML = summary.description.substr(0, 200);
+      descElement.innerHTML = summary.description;
       sourceElement.innerHTML = newsdata.source;
 
       document.getElementById('loading').classList.add('hidden');
@@ -46,6 +55,7 @@ document.getElementById("generateCard").addEventListener("click", async () => {
         // Reset usage for a new day
         usageData.date = today;
         usageData.clicks = 0;
+        usageData.unlimited = false;
       }
       usageData.clicks += 1;
       localStorage.setItem('usage', JSON.stringify(usageData));
@@ -152,4 +162,47 @@ function wrapText(context, text, maxWidth) {
   lines.push(currentLine);
 
   return lines;
+}
+
+// Simulated payment gateway integration
+document.getElementById('payButton').addEventListener('click', async () => {
+  const card = document.getElementById('card');
+  const quota = document.getElementById('quota');
+  const today = new Date().toDateString();
+
+  card.classList.remove('hidden');
+  quota.classList.add('hidden')
+  
+  try {
+    // Fake API call to payment gateway
+    const paymentResponse = await fakePaymentGateway();
+
+    if (paymentResponse.success) {
+      const usageData = JSON.parse(localStorage.getItem('usage')) || {};
+      usageData.date = today;
+      usageData.unlimited = true; // Unlimited access flag
+      localStorage.setItem('usage', JSON.stringify(usageData));
+      card.classList.add('hidden');
+    } else {
+      card.classList.add('hidden');
+      quota.classList.remove('hidden');
+      document.getElementById('statusMessage').textContent =
+        "Payment failed. Please try again.";
+    }
+  } catch (error) {
+    console.error(error);
+    card.classList.add('hidden');
+    quota.classList.remove('hidden');
+    document.getElementById('statusMessage').textContent =
+      "An error occurred during payment. Please try again.";
+  }
+});
+
+// Fake Payment Gateway API
+async function fakePaymentGateway() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: true }); // Simulate successful payment
+    }, 2000); // Simulate network delay
+  });
 }

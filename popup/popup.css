@@ -10,6 +10,25 @@ body {
   height: 100vh;
 }
 
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background of the scrollbar track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6d6d6; /* Color of the scrollbar thumb */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3; /* Color on hover */
+}
+
 .container {
   width: 500px;
   height: 550px;
@@ -33,6 +52,7 @@ button {
   background-color: #4CAF50;
   color: white;
   border: none;
+  outline: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -40,13 +60,13 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #306c33;
 }
 
 .hidden {
   display: none!important;
 }
-.card {
+.card, .quota {
   width: 460px;
   background-color: #fff;
   padding: 20px;
@@ -88,4 +108,10 @@ p#source {
   100% {
     transform: rotate(360deg);
   }
+}
+
+#statusMessage {
+  margin-top: 20px;
+  font-weight: bold;
+  color: rgb(202, 5, 5);
 }
