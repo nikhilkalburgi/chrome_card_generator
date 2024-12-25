@@ -20,7 +20,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "popup/default.webp"
+        "popup/default.webp", "razorpay/checkout.js"
       ],
       "matches": ["<all_urls>"]
     }

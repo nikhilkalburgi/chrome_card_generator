@@ -1,13 +1,12 @@
 /* General Styles */
+
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 /* Scrollbar styling */
@@ -31,24 +30,23 @@ body {
 
 .container {
   width: 500px;
-  height: 550px;
   text-align: center;
   background-color: #fff;
-  padding: 20px;
-  overflow-y: auto;
   overflow-x: hidden;
 }
 
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: left;
+.container > h1:first-child {
+  font-size: 34px;
+  margin: 15px;
+  color: #fa0404;
+}
+.tagline {
+  font-size: 18px;
 }
 
 button {
   padding: 12px 25px;
-  font-size: 16px;
+  font-size: 20px;
   background-color: #4CAF50;
   color: white;
   border: none;
@@ -57,10 +55,13 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin: 10px 0;
+  width: 85%;
+  font-weight: 700;
+  text-shadow: 2px 2px 2px #565656;
 }
 
 button:hover {
-  background-color: #306c33;
+  background-color: #29952e;
 }
 
 .hidden {
@@ -69,17 +70,24 @@ button:hover {
 .card, .quota {
   width: 460px;
   background-color: #fff;
-  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: left;
+  margin-inline: auto;
   margin-block: 10px;
+  overflow: hidden;
+}
+
+.card {
+  text-align: left;
+  min-height: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card img {
   width: 100%;
   height: auto;
-  border-radius: 10px;
+}
+.card h1, .card p {
+  padding-inline: 20px;
 }
 
 p#source {
@@ -88,10 +96,9 @@ p#source {
 }
 .loading-container {
   display: flex;
+  height: 500px;
   justify-content: center;
   align-items: center;
-  padding-block: 100px;
-  background-color: #f9f9f9;
 }
 .spinner {
   width: 50px;
@@ -114,4 +121,152 @@ p#source {
   margin-top: 20px;
   font-weight: bold;
   color: rgb(202, 5, 5);
+}
+
+.card-selector {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.card-selector .option {
+  text-align: center;
+}
+
+.card-selector .option input[type="radio"] {
+  -webkit-appearance: none; /* For WebKit browsers */
+  -moz-appearance: none; /* For Mozilla browsers */
+  appearance: none; /* General appearance reset */
+  width: 16px; /* Increase size */
+  height: 16px; /* Increase size */
+  border: 2px solid #4caf50; /* Green border */
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-bottom: 5px;
+}
+
+.card-selector .option input[type="radio"]:checked {
+  background-color: #4caf50; /* Green background when selected */
+  border-color: #4caf50;
+}
+
+.card-placeholder {
+  width: 100px;
+  height: 150px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.placeholder {
+  background-color: #e0e0e0;
+  border-radius: 1px;
+}
+
+.card-selector .title {
+  height: 10px;
+  margin-block: 3px;
+}
+
+.card-selector .image {
+  height: 50%;
+  margin-block: 3px;
+}
+
+.card-selector .description {
+  height: 3px;
+  margin-block: 3px;
+}
+
+.w-100 {
+  width: 100%;
+}
+.w-50 {
+  width: 50%;
+}
+
+.upgrade-component {
+  text-align: center;
+  font-family: Arial;
+  font-size: 17px;
+  width: 85%;
+  margin: auto;
+}
+
+.upgrade-component p:last-child {
+  border-radius: 10px;
+  background-color: #E9F2FE;
+  padding: 20px;
+}
+
+.form-container {
+  margin: 0 auto;
+  padding-inline: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-block: 15px;
+}
+
+.form-row input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 20px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.payment {
+  padding-inline: 10px;
+}
+
+.payment > div {
+  display: flex;
+  border: 0.1px solid #ddd;
+}
+
+.payment .methods {
+  width: 65%;
+  background-color: #ddd;
+}
+.payment img {
+  width: 100%;
+  height: 100%;
+}
+
+button#payButton {
+  width: 35%;
+  background: yellow;
+  color: #000;
+  border-radius: 0px;
+  margin: 0px;
+  text-shadow: none;
+}
+
+.quota > .upgrade-heading {
+  border-radius: 5px;
+  background-color: #E9F2FE;
+  padding: 20px;
+}
+
+.quota h2 {
+  font-size: 24px;
+  margin: 0px;
+}
+
+
+.quota p {
+  font-size: 18px;
+  margin: 5px;
 }

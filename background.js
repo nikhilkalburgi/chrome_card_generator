@@ -1,5 +1,4 @@
-//This not secure, but I will use .env for prod ready app.
-const OPENAI_API_KEY = '<YOUR_API_KEY>'
+const OPENAI_API_KEY = 'YOUR_OPENAI_KEY'
 
 chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
   const {type, title, content} = obj;

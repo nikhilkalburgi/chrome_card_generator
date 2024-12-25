@@ -3,13 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://checkout.razorpay.com http://localhost:3000;">
   <title>News Card Generator</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
   <div class="container">
-    <h1>News In Short</h1>
-    <button id="generateCard">GENERATE NEWS CARD</button>
+    <h1>Quick News</h1>
+    <p class="tagline">Create and share news cards instantly.</p>
+    <div id="cardOptions" class="card-selector">
+      <div class="option">
+        <input type="radio" id="format1" name="cardFormat" value="format1" checked>
+        <div class="card-placeholder">
+          <div>
+            <div class="placeholder title w-100"></div>
+            <div class="placeholder title w-50"></div>
+          </div>
+          <div class="placeholder image w-100"></div>
+          <div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="option">
+        <input type="radio" id="format2" name="cardFormat" value="format2">
+        <div class="card-placeholder"> 
+          <div class="placeholder image w-100"></div>
+          <div>
+            <div class="placeholder title w-100"></div>
+            <div class="placeholder title w-50"></div>
+          </div>
+          <div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+            <div class="placeholder description w-100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div id="card" class="card hidden">
       <div id="loading" class="loading-container">
         <div class="spinner"></div>
@@ -18,19 +59,50 @@
         <img id="image" src="default.webp" alt="News Image" />
         <h1 id="title"></h1>
         <p id="description"></p>
-        <p id="Source"></p>
+        <p id="source"></p>
       </div>
     </div>
     <div id="quota" class="quota hidden">
-      <h1>Quota Exceeded</h1>
-      <p>You can only generate 2 cards per day. Please try again tomorrow.</p>
-      <h1>Upgrade to Premium</h1>
-      <p>Pay ₹10 to get unlimited card generation access for today.</p>
-      <button id="payButton">Pay ₹10</button>
-      <p id="statusMessage"></p>
+      <h2>LIMIT REACED</h2>
+      <p>You’ve reached your daily limit of 2 cards. Please try again tomorrow.</p>
+      <div class="upgrade-heading">
+        <h2>UPRADE TO PREMIUM</h2>
+        <p>Unlock unlimited card generation for the next 8 hours by upgrading for just <strong>₹10!</strong></p>
+      </div>
+      <div class="form-container">
+        <!-- Full Name Row -->
+        <div class="form-row">
+          <input type="text" id="fullName" placeholder="Full Name" />
+        </div>
+        <!-- Email and Contact Row -->
+        <div class="form-row">
+          <input type="email" id="email" placeholder="Email" />
+          <input type="text" id="contact" placeholder="Contact" />
+        </div>
+      </div>
+
+      <div id="payment" class="payment">
+        <div>
+          <div class="methods">
+            <img src="methods.webp" alt="payment methods" />
+          </div>
+          <button id="payButton">Pay ₹10.00</button>
+        </div>
+        <p id="statusMessage"></p>
+      </div>
     </div>
-    <button id="downloadCard" class="hidden">DOWNLOAD CARD</button>
+    <button id="generateCard">CREATE MY CARD!</button>
+    <button id="downloadCard" class="hidden">DOWNLOAD THE CARD</button>
+    <div id="upgradeComponent" class="upgrade-component">
+      <p>
+        Generate up to 2 news cards for FREE!
+      </p>
+      <p>
+        <a href="#" class="link">Upgrade</a> for just ₹10/- and enjoy unlimited access for the next 8 hours!
+      </p>
+    </div>
   </div>
+  <script src="../razorpay/checkout.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

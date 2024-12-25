@@ -75,6 +75,6 @@
             const source = location.hostname?.split('.') || [];
             const isAbsolute = isAbsoluteURL(image);
             response({ title, content, image: isAbsolute ? image: "", source: source[source.length - 2] || "No Source" });
-          }
+        }
     });
 })(); 
