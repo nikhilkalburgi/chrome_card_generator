@@ -129,8 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const generateCardBtn = document.getElementById("generateCard");
   const card = document.getElementById('card');
   const quota = document.getElementById('quota');
+  let titleElement = document.getElementById('titleBeforeImg');
   const imgElement = document.getElementById('image');
-  const titleElement = document.getElementById('title');
   const descElement = document.getElementById('description');
   const sourceElement = document.getElementById('source');
   const loader = document.getElementById('loading');
@@ -151,6 +151,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   generateCardBtn.addEventListener("click", async () => {
+
+    if(!titleElement.classList.contains('hidden')) {
+      titleElement.classList.add('hidden');
+    }
+
+    if(document.getElementById('format1').checked) {
+      titleElement = document.getElementById('titleBeforeImg');
+      titleElement.classList.remove('hidden');
+    } else {
+      titleElement = document.getElementById('titleAfterImg');
+      titleElement.classList.remove('hidden');
+    }
   
     loader.classList.remove('hidden');
     card.classList.remove('hidden');
@@ -201,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
         imgElement.src = newsdata.image;
         titleElement.innerHTML = summary.title;
         descElement.innerHTML = summary.description;
-        sourceElement.innerHTML = newsdata.source;
+        sourceElement.innerHTML = `source: ${newsdata.source}`;
   
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('cardContent').classList.remove('hidden');
@@ -250,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
       let titleHeight = 0; 
       let descriptionHeight = 0;
-    
+      console.log(document.getElementById('format1').checked);
       if (document.getElementById('format1').checked) {
         // Draw Title first
         const title = card.querySelector('h1').textContent;
@@ -374,4 +386,48 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  document.getElementById("close-btn").addEventListener("click", () => {
+    window.close(); // Closes the popup window
+  });
+
+  document.getElementById("edit-btn").addEventListener("click", function () {
+    const editBtn = this; // The edit button
+    const cardContent = document.getElementById("cardContent");
+  
+    // Get all the editable elements (h1, p)
+    const editableElements = cardContent.querySelectorAll("h1, p");
+  
+    if (editBtn.textContent === "✎") {
+      // Switch to edit mode
+      editableElements.forEach((element) => {
+        element.setAttribute("contenteditable", "true");
+        element.style.paddindBlock = "2px";
+        element.style.border = "1px dashed gray"; // Highlight editable elements
+      });
+  
+      editBtn.textContent = "✔"; // Change button to confirm mode
+      editBtn.style.background = "#7cf29c";
+    } else {
+      // Switch to confirm mode
+      editableElements.forEach((element) => {
+        element.setAttribute("contenteditable", "false");
+        element.style.paddindBlock = "0px";
+        element.style.border = "none"; // Remove border
+      });
+  
+      editBtn.textContent = "✎"; // Change button back to edit mode
+      editBtn.style.background = "#7272f1";
+    }
+  });
+
+  document.getElementById("link").addEventListener('click',(e) => {
+    e.preventDefault();
+    card.classList.add('hidden');
+    upgradeComponent.classList.add('hidden');
+    generateCardBtn.classList.add('hidden');
+    cardOptions.classList.add('hidden');
+    quota.classList.remove('hidden');
+  })
+  
 });

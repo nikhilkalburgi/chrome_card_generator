@@ -8,8 +8,9 @@
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
+  <button id="close-btn">POP</button>
   <div class="container">
-    <h1>Quick News</h1>
+    <h1>QUICK NEWS</h1>
     <p class="tagline">Create and share news cards instantly.</p>
     <div id="cardOptions" class="card-selector">
       <div class="option">
@@ -55,12 +56,15 @@
       <div id="loading" class="loading-container">
         <div class="spinner"></div>
       </div>
-      <div id="cardContent" class="hidden">
+      <div id="cardContent" class="hidden" style="position: relative;">
+        <button id="edit-btn">✎</button>
+        <h1 id="titleBeforeImg"></h1>
         <img id="image" src="default.webp" alt="News Image" />
-        <h1 id="title"></h1>
+        <h1 id="titleAfterImg" class="hidden"></h1>
         <p id="description"></p>
         <p id="source"></p>
       </div>
+      
     </div>
     <div id="quota" class="quota hidden">
       <h2>LIMIT REACED</h2>
@@ -98,7 +102,7 @@
         Generate up to 2 news cards for FREE!
       </p>
       <p>
-        <a href="#" class="link">Upgrade</a> for just ₹10/- and enjoy unlimited access for the next 8 hours!
+        <a href="#" id="link" class="link">Upgrade</a> for just ₹10/- and enjoy unlimited access for the next 8 hours!
       </p>
     </div>
   </div>

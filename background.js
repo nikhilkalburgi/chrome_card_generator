@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = 'YOUR_OPENAI_KEY'
+const OPENAI_API_KEY = 'OPENAI_KEY'
 
 chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
   const {type, title, content} = obj;
@@ -24,6 +24,7 @@ chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
         temperature: 0.7,
       }),
     }).then(response => {
+      console.log(response)
       try {
         return response.json()
       }catch(err) {
