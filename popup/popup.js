@@ -68,45 +68,55 @@ function validateInputs() {
 
 // Payment Gateway API
 async function fakePaymentGateway(fullName, email, contact) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      // Razorpay payment options
+      const keyId = "YOUR_RAZORPAY_KEY_ID"; // Replace with your Razorpay key_id
+      const keySecret = "YOUR_RAZORPAY_KEY_SECRET"; // Replace with your Razorpay key_secret
+      const auth = btoa(`${keyId}:${keySecret}`); // Encode credentials for Basic Auth
+    
+      // Step 1: Create an order
+      const orderResponse = await fetch("https://api.razorpay.com/v1/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${auth}`,
+        },
+        body: JSON.stringify({
+          amount: 50000, // Amount in paise (₹500)
+          currency: "INR"
+        }),
+      });
+    
+      if (!orderResponse.ok) {
+        resolve({ success: false});
+        return;
+      }
+    
+      const order = await orderResponse.json();
+    
+      // Step 2: Open Razorpay Checkout
       const options = {
-        key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay Key ID
-        amount: 10 * 100, // Amount in paisa (₹10)
-        currency: "INR",
-        name: "Card Generator",
-        description: "Unlock unlimited card generation for one day",
+        key: keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Your Company",
+        description: "Test Transaction",
+        order_id: order.id, // Pass the order_id from the response
         handler: function (response) {
-          // Payment successful
-          resolve({ success: true });
+          alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
         },
         prefill: {
           name: fullName,
-          email: email,
+          email:email,
           contact: contact,
         },
         theme: {
           color: "#F37254",
         },
       };
-
-      // Check if Razorpay is loaded
-      if (!window.Razorpay) {
-        resolve({success: false});
-      }
-
-      try {  // Open Razorpay Checkout
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      }catch(error) {
-        resolve({ success: false});
-      }
-
-      // Handle payment failure
-      rzp.on("payment.failed", function (response) {
-        resolve({ success: false});
-      });
+    
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
     } catch (error) {
       resolve({ success: false});
     }
