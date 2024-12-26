@@ -3,27 +3,39 @@
   "name": "News Card Generator",
   "version": "1.0",
   "description": "Generate beautiful news cards from any news page.",
-  "permissions": ["activeTab", "scripting", "storage", "tabs"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-      "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content-script.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content-script.js"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "popup/default.webp", "razorpay/checkout.js"
+        "popup/default.webp",
+        "razorpay/checkout.js"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
-  

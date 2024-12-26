@@ -67,7 +67,7 @@ function validateInputs() {
 }
 
 // Payment Gateway API
-async function fakePaymentGateway(fullName, email, contact) {
+async function razorpayPaymentGateway(fullName, email, contact) {
   return new Promise(async (resolve, reject) => {
     try {
       const keyId = "YOUR_RAZORPAY_KEY_ID"; // Replace with your Razorpay key_id
@@ -82,7 +82,7 @@ async function fakePaymentGateway(fullName, email, contact) {
           Authorization: `Basic ${auth}`,
         },
         body: JSON.stringify({
-          amount: 50000, // Amount in paise (₹500)
+          amount: 1000, // Amount in paise (₹10)
           currency: "INR"
         }),
       });
@@ -148,6 +148,20 @@ document.addEventListener("DOMContentLoaded", () => {
     usageData.unlimited = false;
     upgradeComponent.children[0].innerHTML = '<strong>Thank you for upgrading!</strong>';
     upgradeComponent.children[1].innerHTML = `Your premium access will expire at <strong>${usageData.date}</strong>. <p style="font-size:14px; margin:0px; padding:0px;">Enjoy unlimited card generation until then!</p>`;
+  }
+  
+  const state = JSON.parse(localStorage.getItem('state')) || null;
+  if(state) {
+    generateCardBtn.classList.add('hidden');
+    cardOptions.classList.add('hidden');
+    imgElement.src = state.image;
+    titleElement.innerText = state.title;
+    descElement.innerText = state.description;
+    sourceElement.innerText = `${state.source}`;
+    card.classList.remove('hidden');
+    loader.classList.add('hidden');
+    cardContent.classList.remove('hidden');
+    downloadCard.classList.remove('hidden');
   }
 
   generateCardBtn.addEventListener("click", async () => {
@@ -215,9 +229,9 @@ document.addEventListener("DOMContentLoaded", () => {
         descElement.innerHTML = summary.description;
         sourceElement.innerHTML = `source: ${newsdata.source}`;
   
-        document.getElementById('loading').classList.add('hidden');
-        document.getElementById('cardContent').classList.remove('hidden');
-        document.getElementById('downloadCard').classList.remove('hidden');
+        loader.classList.add('hidden');
+        cardContent.classList.remove('hidden');
+        downloadCard.classList.remove('hidden');
   
         // Update usage data
         if (new Date(usageData.date).toDateString() !== new Date(today).toDateString() ) {
@@ -228,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         usageData.clicks += 1;
         localStorage.setItem('usage', JSON.stringify(usageData));
+        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: newsdata.source}))
       });
   
   });
@@ -301,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
       // Draw Description
       const description = card.querySelector('p').textContent;
-      ctx.fillStyle = "#555";
+      ctx.fillStyle = "#333";
       ctx.font = "26px Arial";
     
       const wrappedDesc = wrapText(ctx, description, 1080 - (0.1 * 1080));
@@ -311,13 +326,16 @@ document.addEventListener("DOMContentLoaded", () => {
     
       // Draw Source
       const source = card.querySelector('p#source').textContent;
-      ctx.fillStyle = "#545353";
+      ctx.fillStyle = "#706f6f";
       ctx.font = "20px Arial";
       ctx.fillText(source, 50, descriptionHeight + (wrappedDesc.length * 26) + 50);
     
       // Now that everything is drawn, trigger the download
       const dataUrl = canvas.toDataURL('image/png');
       downloadImage(dataUrl);
+
+      //remove state
+      localStorage.removeItem('state');
     
       // Hide and show relevant elements after download
       card.classList.add('hidden');
@@ -349,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const fullName = document.getElementById('fullName').value.trim();
       const email = document.getElementById('email').value.trim();
       const contact = document.getElementById('contact').value.trim();
-      const paymentResponse = await fakePaymentGateway(fullName, email, contact);
+      const paymentResponse = await razorpayPaymentGateway(fullName, email, contact);
       
       if (paymentResponse.success) {
         const usageData = JSON.parse(localStorage.getItem('usage')) || {};
@@ -388,6 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("close-btn").addEventListener("click", () => {
+    localStorage.removeItem('state');
     window.close(); // Closes the popup window
   });
 
@@ -402,7 +421,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Switch to edit mode
       editableElements.forEach((element) => {
         element.setAttribute("contenteditable", "true");
-        element.style.paddindBlock = "2px";
+        element.style.paddingBlock = "4px";
+        element.style.marginInline = "5px";
         element.style.border = "1px dashed gray"; // Highlight editable elements
       });
   
@@ -412,12 +432,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // Switch to confirm mode
       editableElements.forEach((element) => {
         element.setAttribute("contenteditable", "false");
-        element.style.paddindBlock = "0px";
+        element.style.paddingBlock = "0px";
+        element.style.marginInline = "0px";
         element.style.border = "none"; // Remove border
+        if(element.innerHTML === '<br>') element.innerHTML = '';
       });
   
       editBtn.textContent = "✎"; // Change button back to edit mode
       editBtn.style.background = "#7272f1";
+      localStorage.setItem('state', JSON.stringify({image: imgElement.src, title: titleElement.innerText, description: descElement.innerText, source: sourceElement.innerText}))
     }
   });
 

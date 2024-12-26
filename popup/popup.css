@@ -82,6 +82,7 @@ button:hover {
   text-align: left;
   min-height: 500px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .card img {
@@ -93,7 +94,7 @@ button:hover {
 }
 
 p#source {
-  font-size: smaller;
+  font-size: small;
   color: #545353;
   opacity: 0.6;
 }
@@ -304,9 +305,9 @@ button#payButton {
 
 #edit-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #7272f1; 
+  bottom: 15px;
+  right: 15px;
+  background: #7e7ef3;
   padding: 5px; 
   cursor: pointer;
   color: #000;
@@ -314,4 +315,6 @@ button#payButton {
   width: 40px;
   border-radius: 15px;
   text-shadow: none;
+  margin: 0px;
+  z-index: 999;
 }
