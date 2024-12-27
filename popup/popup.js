@@ -93,7 +93,6 @@ async function generateHmacSHA256Signature(message, secret) {
 async function verifyPayment(orderId, razorpayPaymentId, razorpaySignature, secret) {
   const message = `${orderId}|${razorpayPaymentId}`;
   const generatedSignature = await generateHmacSHA256Signature(message, secret);
-  console.log(generatedSignature, razorpaySignature)
   if (generatedSignature === razorpaySignature) {
     return true
   } else {
@@ -139,7 +138,6 @@ async function razorpayPaymentGateway(fullName, email, contact) {
         order_id: order.id, // Pass the order_id from the response
         handler: async function (response) {
           const result = await verifyPayment(order.id, response.razorpay_payment_id, response.razorpay_signature, keySecret)
-          console.log(result)
           if(result) {
             resolve({success: true});
           } else {
@@ -160,11 +158,9 @@ async function razorpayPaymentGateway(fullName, email, contact) {
       razorpay.open();
 
       razorpay.on('payment.failed', () => {
-        console.log(error)
         resolve({ success: false});
       })
     } catch (error) {
-      console.log(error)
       resolve({ success: false});
     }
   });
@@ -332,7 +328,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
       let titleHeight = 0; 
       let descriptionHeight = 0;
-      console.log(document.getElementById('format1').checked);
       const state = JSON.parse(localStorage.getItem('state')) || null;
       if (state && state.isDefaultFormat) {
         // Draw Title first
@@ -424,8 +419,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById('email').value.trim();
       const contact = document.getElementById('contact').value.trim();
       const paymentResponse = await razorpayPaymentGateway(fullName, email, contact);
-
-      console.log(paymentResponse);
       
       if (paymentResponse.success) {
         const usageData = JSON.parse(localStorage.getItem('usage')) || {};
@@ -514,18 +507,18 @@ document.addEventListener("DOMContentLoaded", () => {
   
 });
 
-// // Disable right-click
-// document.addEventListener("contextmenu", (event) => event.preventDefault());
+// Disable right-click
+document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-// // Disable specific keyboard shortcuts
-// document.addEventListener("keydown", (event) => {
-//   if (
-//     event.key === "F12" || // F12
-//     (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
-//     (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
-//     (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
-//   ) {
-//     event.preventDefault();
-//   }
-// });
+// Disable specific keyboard shortcuts
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "F12" || // F12
+    (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
+    (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
+    (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
+  ) {
+    event.preventDefault();
+  }
+});
 
