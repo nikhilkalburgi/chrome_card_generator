@@ -507,18 +507,18 @@ document.addEventListener("DOMContentLoaded", () => {
   
 });
 
-// // Disable right-click
-// document.addEventListener("contextmenu", (event) => event.preventDefault());
+// Disable right-click
+document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-// // Disable specific keyboard shortcuts
-// document.addEventListener("keydown", (event) => {
-//   if (
-//     event.key === "F12" || // F12
-//     (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
-//     (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
-//     (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
-//   ) {
-//     event.preventDefault();
-//   }
-// });
+// Disable specific keyboard shortcuts
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "F12" || // F12
+    (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
+    (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
+    (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
+  ) {
+    event.preventDefault();
+  }
+});
 
