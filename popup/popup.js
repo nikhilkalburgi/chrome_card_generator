@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     imgElement.src = state.image;
     titleElement.innerText = state.title;
     descElement.innerText = state.description;
-    sourceElement.innerText = `${state.source}`;
+    sourceElement.innerText = state.source;
     card.classList.remove('hidden');
     loader.classList.add('hidden');
     cardContent.classList.remove('hidden');
@@ -293,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         usageData.clicks += 1;
         localStorage.setItem('usage', JSON.stringify(usageData));
-        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: newsdata.source, isDefaultFormat: document.getElementById('format1').checked}));
+        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: `source: ${newsdata.source}`, isDefaultFormat: document.getElementById('format1').checked}));
       });
   
   });
@@ -507,18 +507,18 @@ document.addEventListener("DOMContentLoaded", () => {
   
 });
 
-// Disable right-click
-document.addEventListener("contextmenu", (event) => event.preventDefault());
+// // Disable right-click
+// document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-// Disable specific keyboard shortcuts
-document.addEventListener("keydown", (event) => {
-  if (
-    event.key === "F12" || // F12
-    (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
-    (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
-    (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
-  ) {
-    event.preventDefault();
-  }
-});
+// // Disable specific keyboard shortcuts
+// document.addEventListener("keydown", (event) => {
+//   if (
+//     event.key === "F12" || // F12
+//     (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
+//     (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
+//     (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
+//   ) {
+//     event.preventDefault();
+//   }
+// });
 
