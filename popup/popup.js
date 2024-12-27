@@ -66,12 +66,47 @@ function validateInputs() {
   return true;
 }
 
+async function generateHmacSHA256Signature(message, secret) {
+  // Convert the secret and message to Uint8Array
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(secret);
+  const messageData = encoder.encode(message);
+
+  // Import the secret key
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: { name: 'SHA-256' } },
+    false,
+    ['sign']
+  );
+
+  // Generate the HMAC signature
+  const signature = await crypto.subtle.sign('HMAC', key, messageData);
+
+  // Convert the signature to a hex string
+  return Array.from(new Uint8Array(signature))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function verifyPayment(orderId, razorpayPaymentId, razorpaySignature, secret) {
+  const message = `${orderId}|${razorpayPaymentId}`;
+  const generatedSignature = await generateHmacSHA256Signature(message, secret);
+  console.log(generatedSignature, razorpaySignature)
+  if (generatedSignature === razorpaySignature) {
+    return true
+  } else {
+    return false
+  }
+}
+
 // Payment Gateway API
 async function razorpayPaymentGateway(fullName, email, contact) {
   return new Promise(async (resolve, reject) => {
     try {
-      const keyId = "YOUR_RAZORPAY_KEY_ID"; // Replace with your Razorpay key_id
-      const keySecret = "YOUR_RAZORPAY_KEY_SECRET"; // Replace with your Razorpay key_secret
+      const keyId = "KEY_ID"; // Replace with your Razorpay key_id
+      const keySecret = "KEY_SECRET"; // Replace with your Razorpay key_secret
       const auth = btoa(`${keyId}:${keySecret}`); // Encode credentials for Basic Auth
     
       // Step 1: Create an order
@@ -95,15 +130,21 @@ async function razorpayPaymentGateway(fullName, email, contact) {
       const order = await orderResponse.json();
     
       // Step 2: Open Razorpay Checkout
-      const options = {
+      const paymentOptions = {
         key: keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "Your Company",
+        name: "TEST Company",
         description: "Test Transaction",
         order_id: order.id, // Pass the order_id from the response
-        handler: function (response) {
-          alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
+        handler: async function (response) {
+          const result = await verifyPayment(order.id, response.razorpay_payment_id, response.razorpay_signature, keySecret)
+          console.log(result)
+          if(result) {
+            resolve({success: true});
+          } else {
+            resolve({success: false});
+          }
         },
         prefill: {
           name: fullName,
@@ -111,13 +152,19 @@ async function razorpayPaymentGateway(fullName, email, contact) {
           contact: contact,
         },
         theme: {
-          color: "#F37254",
+          color: "#4CAF50",
         },
       };
     
-      const razorpay = new window.Razorpay(options);
+      const razorpay = new window.Razorpay(paymentOptions);
       razorpay.open();
+
+      razorpay.on('payment.failed', () => {
+        console.log(error)
+        resolve({ success: false});
+      })
     } catch (error) {
+      console.log(error)
       resolve({ success: false});
     }
   });
@@ -143,15 +190,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const lastCheckTime = new Date(usageData.date);
   const currentTime = new Date();
   const timeDifference = (currentTime - lastCheckTime) / (1000 * 60 * 60); // Convert milliseconds to hours
+  const options = { hour: 'numeric', minute: '2-digit', hour12: true, day: 'numeric', month: 'short', year: 'numeric' };
 
   if (timeDifference < 8 && usageData.unlimited) {
+    const expiryTime = new Date(new Date(usageData.date).getTime() + 8 * 60 * 60 * 1000).toLocaleString('en-US', options);
     usageData.unlimited = false;
     upgradeComponent.children[0].innerHTML = '<strong>Thank you for upgrading!</strong>';
-    upgradeComponent.children[1].innerHTML = `Your premium access will expire at <strong>${usageData.date}</strong>. <p style="font-size:14px; margin:0px; padding:0px;">Enjoy unlimited card generation until then!</p>`;
+    upgradeComponent.children[1].innerHTML = `Your premium access will expire at <strong>${expiryTime}</strong>. <p style="font-size:14px; margin:0px; padding:0px;">Enjoy unlimited card generation until then!</p>`;
   }
   
   const state = JSON.parse(localStorage.getItem('state')) || null;
   if(state) {
+
+    if(!state.isDefaultFormat) {
+      titleElement.classList.add('hidden');
+      titleElement = document.getElementById('titleAfterImg');
+      titleElement.classList.remove('hidden');
+    }
     generateCardBtn.classList.add('hidden');
     cardOptions.classList.add('hidden');
     imgElement.src = state.image;
@@ -242,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         usageData.clicks += 1;
         localStorage.setItem('usage', JSON.stringify(usageData));
-        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: newsdata.source}))
+        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: newsdata.source, isDefaultFormat: document.getElementById('format1').checked}));
       });
   
   });
@@ -278,9 +333,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let titleHeight = 0; 
       let descriptionHeight = 0;
       console.log(document.getElementById('format1').checked);
-      if (document.getElementById('format1').checked) {
+      const state = JSON.parse(localStorage.getItem('state')) || null;
+      if (state && state.isDefaultFormat) {
         // Draw Title first
-        const title = card.querySelector('h1').textContent;
+        const title = card.querySelector('h1#titleBeforeImg').textContent;
         ctx.fillStyle = "#333";
         ctx.font = "bold 34px Arial";
     
@@ -300,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.drawImage(image, 50, 50, 980, 0.55 * 1080);
     
         // Draw Title below Image
-        const title = card.querySelector('h1').textContent;
+        const title = card.querySelector('h1#titleAfterImg').textContent;
         ctx.fillStyle = "#333";
         ctx.font = "bold 34px Arial";
     
@@ -368,6 +424,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById('email').value.trim();
       const contact = document.getElementById('contact').value.trim();
       const paymentResponse = await razorpayPaymentGateway(fullName, email, contact);
+
+      console.log(paymentResponse);
       
       if (paymentResponse.success) {
         const usageData = JSON.parse(localStorage.getItem('usage')) || {};
@@ -440,11 +498,12 @@ document.addEventListener("DOMContentLoaded", () => {
   
       editBtn.textContent = "✎"; // Change button back to edit mode
       editBtn.style.background = "#7272f1";
-      localStorage.setItem('state', JSON.stringify({image: imgElement.src, title: titleElement.innerText, description: descElement.innerText, source: sourceElement.innerText}))
+      const state = JSON.parse(localStorage.getItem('state')) || null;
+      localStorage.setItem('state', JSON.stringify({image: imgElement.src, title: titleElement.innerText, description: descElement.innerText, source: sourceElement.innerText, isDefaultFormat: state?.isDefaultFormat}))
     }
   });
 
-  document.getElementById("link").addEventListener('click',(e) => {
+  document.getElementById("link")?.addEventListener('click',(e) => {
     e.preventDefault();
     card.classList.add('hidden');
     upgradeComponent.classList.add('hidden');
@@ -454,3 +513,19 @@ document.addEventListener("DOMContentLoaded", () => {
   })
   
 });
+
+// // Disable right-click
+// document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+// // Disable specific keyboard shortcuts
+// document.addEventListener("keydown", (event) => {
+//   if (
+//     event.key === "F12" || // F12
+//     (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
+//     (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
+//     (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
+//   ) {
+//     event.preventDefault();
+//   }
+// });
+

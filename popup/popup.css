@@ -11,21 +11,21 @@ body {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 5px; /* Width of the scrollbar */
+  width: 5px!important; /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Background of the scrollbar track */
-  border-radius: 10px;
+  background: #f1f1f1!important; /* Background of the scrollbar track */
+  border-radius: 10px!important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d6d6d6; /* Color of the scrollbar thumb */
-  border-radius: 10px;
+  background: #d6d6d6!important; /* Color of the scrollbar thumb */
+  border-radius: 10px!important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b3b3b3; /* Color on hover */
+  background: #b3b3b3!important; /* Color on hover */
 }
 
 .container {
