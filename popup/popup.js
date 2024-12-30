@@ -104,8 +104,8 @@ async function verifyPayment(orderId, razorpayPaymentId, razorpaySignature, secr
 async function razorpayPaymentGateway(fullName, email, contact) {
   return new Promise(async (resolve, reject) => {
     try {
-      const keyId = "<KEY_ID>"; // Replace with your Razorpay key_id
-      const keySecret = "<KEY_SECRET>"; // Replace with your Razorpay key_secret
+      const keyId = "KEY_ID"; // Replace with your Razorpay key_id
+      const keySecret = "KEY_SECRET"; // Replace with your Razorpay key_secret
       const auth = btoa(`${keyId}:${keySecret}`); // Encode credentials for Basic Auth
     
       // Step 1: Create an order
@@ -166,7 +166,7 @@ async function razorpayPaymentGateway(fullName, email, contact) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const radioButtons = document.querySelectorAll("input[name='cardFormat']");
   const placeholderCards = document.querySelectorAll(".card-placeholder");
   const generateCardBtn = document.getElementById("generateCard");
@@ -181,6 +181,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const downloadCard = document.getElementById('downloadCard');
   const cardOptions = document.getElementById('cardOptions'); 
   const upgradeComponent = document.getElementById('upgradeComponent');
+
+  const tabs = await chrome.tabs.query({
+    currentWindow: true,
+    active: true
+  });
+  chrome.runtime.sendMessage({ type: 'loadScript', title: tabs[0]});
 
   const usageData = JSON.parse(localStorage.getItem('usage')) || {};
   const lastCheckTime = new Date(usageData.date);

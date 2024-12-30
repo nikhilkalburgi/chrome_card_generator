@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = '<OPENAPI_KEY>'
+const OPENAI_API_KEY = 'OPENAPI_KEY'
 
 chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
   const {type, title, content} = obj;
@@ -40,6 +40,11 @@ chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
     }
     }).catch((err) => {
       sendResponse({ title: 'No Title', description: 'No Description', image:'nil' });
+    })
+  } else if(type === 'loadScript'){
+    chrome.scripting.executeScript({
+      target: {tabId: title.id},
+      files: ["content-script.js"]
     })
   }
   return true;
