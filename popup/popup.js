@@ -104,8 +104,8 @@ async function verifyPayment(orderId, razorpayPaymentId, razorpaySignature, secr
 async function razorpayPaymentGateway(fullName, email, contact) {
   return new Promise(async (resolve, reject) => {
     try {
-      const keyId = "KEY_ID"; // Replace with your Razorpay key_id
-      const keySecret = "KEY_SECRET"; // Replace with your Razorpay key_secret
+      const keyId = "<KEY_ID>"; // Replace with your Razorpay key_id
+      const keySecret = "<KEY_SECRET>"; // Replace with your Razorpay key_secret
       const auth = btoa(`${keyId}:${keySecret}`); // Encode credentials for Basic Auth
     
       // Step 1: Create an order
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
         imgElement.src = newsdata.image;
         titleElement.innerHTML = summary.title;
         descElement.innerHTML = summary.description;
-        sourceElement.innerHTML = `source: ${newsdata.source}`;
+        sourceElement.innerHTML = `Source: ${newsdata.source}`;
   
         loader.classList.add('hidden');
         cardContent.classList.remove('hidden');
@@ -293,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         usageData.clicks += 1;
         localStorage.setItem('usage', JSON.stringify(usageData));
-        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: `source: ${newsdata.source}`, isDefaultFormat: document.getElementById('format1').checked}));
+        localStorage.setItem('state', JSON.stringify({image: newsdata.image, title: summary.title, description: summary.description, source: `Source: ${newsdata.source}`, isDefaultFormat: document.getElementById('format1').checked}));
       });
   
   });
@@ -409,9 +409,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const options = { hour: 'numeric', minute: '2-digit', hour12: true, day: 'numeric', month: 'short', year: 'numeric' };
     const today = new Date().toLocaleString('en-US', options);
     const expiryTime = new Date(new Date(today).getTime() + 8 * 60 * 60 * 1000).toLocaleString('en-US', options);
-
-    card.classList.remove('hidden');
-    quota.classList.add('hidden')
     
     try {
       // Fake API call to payment gateway
@@ -426,15 +423,17 @@ document.addEventListener("DOMContentLoaded", () => {
         usageData.unlimited = true; // Unlimited access flag
         localStorage.setItem('usage', JSON.stringify(usageData));
         card.classList.add('hidden');
+        quota.classList.add('hidden');
         generateCardBtn.classList.remove('hidden');
         cardOptions.classList.remove('hidden');
         upgradeComponent.children[0].innerHTML = '<strong>Thank you for upgrading!</strong>'
         upgradeComponent.children[1].innerHTML = `Your premium access will expire at <strong>${expiryTime}</strong>. <p style="font-size:14px; margin:0px; padding:0px;">Enjoy unlimited card generation until then!</p>`
         upgradeComponent.classList.remove('hidden');
+        document.getElementById('lr-title').classList.remove('hidden');
+        document.getElementById('lr-description').classList.remove('hidden');
       } else {
         card.classList.add('hidden');
         upgradeComponent.classList.add('hidden');
-        quota.classList.remove('hidden');
         statusMessage.textContent =
           "Payment failed. Please try again.";
       }
@@ -442,7 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(error);
       card.classList.add('hidden');
       upgradeComponent.classList.add('hidden');
-      quota.classList.remove('hidden');
       statusMessage.textContent =
         "An error occurred during payment. Please try again.";
     }
@@ -459,6 +457,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("close-btn").addEventListener("click", () => {
     localStorage.removeItem('state');
     window.close(); // Closes the popup window
+  });
+
+  document.getElementById("reset-btn").addEventListener("click", () => {
+    const state = JSON.parse(localStorage.getItem('state')) || null;
+
+    if(state) {
+      imgElement.src = state.image;
+      titleElement.innerText = state.title;
+      descElement.innerText = state.description;
+      sourceElement.innerText = state.source;
+    }
   });
 
   document.getElementById("edit-btn").addEventListener("click", function () {
@@ -479,8 +488,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
       editBtn.textContent = "✔"; // Change button to confirm mode
       editBtn.style.background = "#7cf29c";
+      document.getElementById("reset-btn").classList.remove('hidden');
     } else {
       // Switch to confirm mode
+      document.getElementById("reset-btn").classList.add('hidden');
       editableElements.forEach((element) => {
         element.setAttribute("contenteditable", "false");
         element.style.paddingBlock = "0px";
@@ -499,6 +510,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("link")?.addEventListener('click',(e) => {
     e.preventDefault();
     card.classList.add('hidden');
+    downloadCard.classList.add('hidden');
+    document.getElementById('lr-title').classList.add('hidden');
+    document.getElementById('lr-description').classList.add('hidden');
     upgradeComponent.classList.add('hidden');
     generateCardBtn.classList.add('hidden');
     cardOptions.classList.add('hidden');
@@ -507,7 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
 });
 
-// Disable right-click
+// // Disable right-click
 document.addEventListener("contextmenu", (event) => event.preventDefault());
 
 // Disable specific keyboard shortcuts
