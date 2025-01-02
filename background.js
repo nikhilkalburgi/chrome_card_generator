@@ -1,4 +1,4 @@
-const OPENAI_API_KEY = 'OPENAPI_KEY'
+const OPENAI_API_KEY = 'OPENAI_KEY';
 
 chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
   const {type, title, content} = obj;

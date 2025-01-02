@@ -133,8 +133,8 @@ async function razorpayPaymentGateway(fullName, email, contact) {
         key: keyId,
         amount: order.amount,
         currency: order.currency,
-        name: "TEST Company",
-        description: "Test Transaction",
+        name: "KreativeByte",
+        description: "Paying to KreativeByte",
         order_id: order.id, // Pass the order_id from the response
         handler: async function (response) {
           const result = await verifyPayment(order.id, response.razorpay_payment_id, response.razorpay_signature, keySecret)
@@ -322,6 +322,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Draw image
     const img = card.querySelector('img');
     const image = new Image();
+    image.crossOrigin = "anonymous";
     
     image.onload = function () {
       // Function to download the image
@@ -528,17 +529,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // // Disable right-click
-document.addEventListener("contextmenu", (event) => event.preventDefault());
+// document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-// Disable specific keyboard shortcuts
-document.addEventListener("keydown", (event) => {
-  if (
-    event.key === "F12" || // F12
-    (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
-    (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
-    (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
-  ) {
-    event.preventDefault();
-  }
-});
+// // Disable specific keyboard shortcuts
+// document.addEventListener("keydown", (event) => {
+//   if (
+//     event.key === "F12" || // F12
+//     (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
+//     (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
+//     (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
+//   ) {
+//     event.preventDefault();
+//   }
+// });
 
