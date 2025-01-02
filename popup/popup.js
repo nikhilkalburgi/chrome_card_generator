@@ -179,6 +179,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loader = document.getElementById('loading');
   const cardContent = document.getElementById('cardContent');
   const downloadCard = document.getElementById('downloadCard');
+  const disclaimer = document.getElementById('disclaimer');
   const cardOptions = document.getElementById('cardOptions'); 
   const upgradeComponent = document.getElementById('upgradeComponent');
 
@@ -219,6 +220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     loader.classList.add('hidden');
     cardContent.classList.remove('hidden');
     downloadCard.classList.remove('hidden');
+    disclaimer.classList.remove('hidden');
   }
 
   generateCardBtn.addEventListener("click", async () => {
@@ -243,6 +245,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if(!cardContent.classList.contains('hidden')) {
       cardContent.classList.add('hidden');
       downloadCard.classList.add('hidden');
+      disclaimer.classList.add('hidden');
     }
     
     const options = { hour: 'numeric', minute: '2-digit', hour12: true, day: 'numeric', month: 'short', year: 'numeric' };
@@ -289,6 +292,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         loader.classList.add('hidden');
         cardContent.classList.remove('hidden');
         downloadCard.classList.remove('hidden');
+        disclaimer.classList.remove('hidden');
   
         // Update usage data
         if (new Date(usageData.date).toDateString() !== new Date(today).toDateString() ) {
@@ -398,6 +402,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Hide and show relevant elements after download
       card.classList.add('hidden');
       downloadCard.classList.add('hidden');
+      disclaimer.classList.add('hidden');
       generateCardBtn.classList.remove('hidden');
       cardOptions.classList.remove('hidden');
     };
@@ -526,6 +531,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     card.classList.add('hidden');
     downloadCard.classList.add('hidden');
+    disclaimer.classList.add('hidden');
     document.getElementById('lr-title').classList.add('hidden');
     document.getElementById('lr-description').classList.add('hidden');
     upgradeComponent.classList.add('hidden');
@@ -537,17 +543,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // // Disable right-click
-// document.addEventListener("contextmenu", (event) => event.preventDefault());
+document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-// // Disable specific keyboard shortcuts
-// document.addEventListener("keydown", (event) => {
-//   if (
-//     event.key === "F12" || // F12
-//     (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
-//     (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
-//     (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
-//   ) {
-//     event.preventDefault();
-//   }
-// });
+// Disable specific keyboard shortcuts
+document.addEventListener("keydown", (event) => {
+  if (
+    event.key === "F12" || // F12
+    (event.ctrlKey && event.shiftKey && event.key === "I") || // Ctrl+Shift+I
+    (event.ctrlKey && event.shiftKey && event.key === "J") || // Ctrl+Shift+J
+    (event.ctrlKey && event.key === "U") // Ctrl+U (View Source)
+  ) {
+    event.preventDefault();
+  }
+});
 
