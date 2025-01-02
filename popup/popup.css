@@ -46,6 +46,29 @@ body {
   margin-top: 0px;
 }
 
+.home-btn {
+  position: absolute;
+  left: 25px;
+  top: 2px;
+  width: 25px;
+  height: 25px;
+  background-color: #000000;
+  clip-path: polygon(50% -6%, 0% 50%, 0% 100%, 100% 100%, 100% 50%);
+  margin: 20px auto;
+  cursor: pointer;
+}
+
+.home-btn::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #ffffff; /* Door color */
+}
+
 button {
   padding: 12px 25px;
   font-size: 20px;
